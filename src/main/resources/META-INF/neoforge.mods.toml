@@ -1,0 +1,34 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+license = "MIT"
+
+[[mods]]
+modId = "rocketatmosphere"
+version = "${mod_version}"
+displayName = "Create: Rocket Atmosphere"
+authors = "Rocket Atmosphere"
+description = '''Efeitos visuais de lancamento para o Create Propulsion: fumaca de ignicao, rastros, chamas e vibracao de camera. Somente cliente, com perfis de qualidade para Android.'''
+
+[[mixins]]
+config = "rocketatmosphere.mixins.json"
+
+[[dependencies.rocketatmosphere]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.1.219,)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.rocketatmosphere]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21.1]"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.rocketatmosphere]]
+modId = "createpropulsion"
+type = "required"
+versionRange = "[1.1.5,)"
+ordering = "AFTER"
+side = "CLIENT"

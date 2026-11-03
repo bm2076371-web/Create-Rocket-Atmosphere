@@ -1,0 +1,58 @@
+package dev.rocketatmosphere.config;
+
+import net.neoforged.neoforge.common.ModConfigSpec;
+
+/** Config de cliente: config/rocketatmosphere-client.toml */
+public final class RAConfig {
+    public static final ModConfigSpec SPEC;
+
+    public static final ModConfigSpec.BooleanValue ENABLED;
+    public static final ModConfigSpec.EnumValue<QualityPreset> QUALITY;
+    public static final ModConfigSpec.IntValue MAX_DISTANCE;
+    public static final ModConfigSpec.DoubleValue PARTICLE_SCALE;
+
+    public static final ModConfigSpec.BooleanValue FLAMES;
+    public static final ModConfigSpec.BooleanValue TRAIL_SMOKE;
+    public static final ModConfigSpec.BooleanValue GROUND_SMOKE;
+    public static final ModConfigSpec.BooleanValue AIR_DENSITY;
+
+    public static final ModConfigSpec.BooleanValue SHAKE_ENABLED;
+    public static final ModConfigSpec.DoubleValue SHAKE_STRENGTH;
+
+    static {
+        ModConfigSpec.Builder b = new ModConfigSpec.Builder();
+
+        b.push("general");
+        ENABLED = b.comment("Liga/desliga todos os efeitos.")
+                .define("enabled", true);
+        QUALITY = b.comment("Qualidade: LOW (Android fraco), MEDIUM, HIGH. Tambem: /rocketatmosphere quality low|medium|high")
+                .defineEnum("quality", QualityPreset.MEDIUM);
+        MAX_DISTANCE = b.comment("Distancia maxima (blocos) dos efeitos. 0 = usar o valor da qualidade.")
+                .defineInRange("maxRenderDistance", 0, 0, 256);
+        PARTICLE_SCALE = b.comment("Tamanho das nuvens de fumaca (1.0 = padrao).")
+                .defineInRange("particleScale", 1.0, 0.25, 3.0);
+        b.pop();
+
+        b.push("effects");
+        FLAMES = b.comment("Faiscas/chamas extras na saida dos motores.")
+                .define("engineFlames", true);
+        TRAIL_SMOKE = b.comment("Fumaca nos motores e rastro durante a subida.")
+                .define("trailSmoke", true);
+        GROUND_SMOKE = b.comment("Nuvem de fumaca espalhada no chao durante ignicao/decolagem.")
+                .define("groundSmoke", true);
+        AIR_DENSITY = b.comment("Reduz a fumaca em ar rarefeito (usa a pressao do ar do Sable; sem fumaça no vacuo).")
+                .define("fadeWithAirPressure", true);
+        b.pop();
+
+        b.push("camera_shake");
+        SHAKE_ENABLED = b.comment("Vibracao de camera perto de motores ligados.")
+                .define("enabled", true);
+        SHAKE_STRENGTH = b.comment("Intensidade da vibracao (0 = desligada, 1 = padrao, 2 = forte).")
+                .defineInRange("strength", 1.0, 0.0, 2.0);
+        b.pop();
+
+        SPEC = b.build();
+    }
+
+    private RAConfig() {}
+}
