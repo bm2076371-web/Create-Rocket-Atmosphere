@@ -15,6 +15,7 @@ public final class RAConfig {
     public static final ModConfigSpec.BooleanValue TRAIL_SMOKE;
     public static final ModConfigSpec.BooleanValue GROUND_SMOKE;
     public static final ModConfigSpec.BooleanValue AIR_DENSITY;
+    public static final ModConfigSpec.BooleanValue ELECTRIC;
 
     public static final ModConfigSpec.BooleanValue SHAKE_ENABLED;
     public static final ModConfigSpec.DoubleValue SHAKE_STRENGTH;
@@ -40,6 +41,8 @@ public final class RAConfig {
                 .define("trailSmoke", true);
         GROUND_SMOKE = b.comment("Nuvem de fumaca espalhada no chao durante ignicao/decolagem.")
                 .define("groundSmoke", true);
+        ELECTRIC = b.comment("Aplica os efeitos tambem aos motores eletricos/ionicos (Vector FE, Ion, creative plasma/ion), em versao mais leve e azulada.")
+                .define("electricThrusters", true);
         AIR_DENSITY = b.comment("Reduz a fumaca em ar rarefeito (usa a pressao do ar do Sable; sem fumaça no vacuo).")
                 .define("fadeWithAirPressure", true);
         b.pop();

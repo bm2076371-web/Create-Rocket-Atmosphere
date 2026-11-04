@@ -1,9 +1,22 @@
-# Create: Rocket Atmosphere (v0.1.0)
+# Create: Rocket Atmosphere (v0.1.1)
 
 Mod **somente de cliente** para Minecraft 1.21.1 / NeoForge que adiciona efeitos de lançamento ao
 **Create Propulsion: Simulated 1.1.5**: fumaça de ignição espalhada no chão, fumaça nos motores,
 rastro na subida, faíscas de chama e vibração de câmera por distância. Não altera nenhum arquivo do
 Create Propulsion.
+
+## Motores suportados (v0.1.1)
+
+| Motor | Perfil |
+|---|---|
+| Thruster (1x1, 2x2, 3x3), Solid Fuel, Liquid Vector, Creative (pluma PLUME) | combustao: chamas, fumaca, rastro, nuvem de chao, vibracao |
+| Vector (FE), Ion, Creative Vector, Creative (pluma PLASMA/ION) | eletrico: faiscas brilhantes, fumaca leve azulada, vibracao mais fraca (config `electricThrusters`) |
+| Creative com pluma NONE | sem efeitos |
+
+Correcao da v0.1.1: na v0.1.0 todo motor com `isIon() == true` era ignorado. No Propulsion o
+Vector (FE) e o Creative Vector herdam do motor ionico, entao ficavam sem efeitos. A direcao do
+escape dos Vector (inclinada pelo vetor) ja vem de `getWorldExhaustRay()`, entao a nuvem de chao e
+o rastro seguem a inclinacao.
 
 ## Status honesto
 
@@ -21,14 +34,14 @@ Create Propulsion.
    `.github/workflows/build.yml`) e cole o conteúdo.
 2. Aba **Actions** → workflow **Build** → *Run workflow* (ou ele roda sozinho a cada push).
 3. Ao terminar (verde), abra a execução → **Artifacts** → `create-rocket-atmosphere-jar` → baixe o zip
-   e extraia `rocketatmosphere-0.1.0.jar`.
+   e extraia `rocketatmosphere-0.1.1.jar`.
 4. Se ficar vermelho: abra o passo *Build*, copie o erro e mande no chat.
 
 No PC: `gradle build` (Gradle 8.8+, Java 21); o jar fica em `build/libs/`.
 
 ## Instalar e testar
 
-1. Coloque `rocketatmosphere-0.1.0.jar` na pasta de mods (Battly: junto dos outros .jar). Requer
+1. Coloque `rocketatmosphere-0.1.1.jar` na pasta de mods (Battly: junto dos outros .jar). Requer
    Create Propulsion 1.1.5+ (e, portanto, Sable/Create que ele já exige).
 2. No jogo: `/rocketatmosphere status` → deve mostrar `gancho ativo=ainda nao` até um motor existir
    por perto. Ligue um motor (qualquer propulsor não-iônico): o status passa a `gancho ativo=sim`.

@@ -3,6 +3,7 @@ package dev.rocketatmosphere.client;
 import dev.propulsionteam.propulsionsimulated.particles.smoke.ThrusterSmokeParticleData;
 import dev.rocketatmosphere.config.Settings;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -28,46 +29,48 @@ final class ThrusterEffects {
 
     private ThrusterEffects() {}
 
-    static void emit(Level level, Settings cfg, ThrusterState st, double throttle, double dist, long now) {
+    static void emit(Level level, Settings cfg, ThrusterState st, double throttle, double dist, long now, boolean electric) {
         RandomSource rnd = level.getRandom();
         double lod = 1.0 - 0.65 * Math.min(1.0, dist / cfg.maxDistance);   // longe = menos particulas
         double air = cfg.airDensity ? AirDensity.at(level, st.nozzle) : 1.0;
         boolean force = dist > FORCE_DISTANCE;
 
         if (cfg.flames) {
-            flames(level, rnd, cfg, st, throttle, cfg.density * lod, now);
+            flames(level, rnd, cfg, st, throttle, cfg.density * lod, now, electric);
         }
         if (air > 0.08) {                                                  // sem fumaca no vacuo
             double k = cfg.density * lod * air;
-            if (cfg.trailSmoke) trail(level, rnd, cfg, st, throttle, k, force, now);
-            if (cfg.groundSmoke) ground(level, rnd, cfg, st, throttle, k, force, now);
+            if (cfg.trailSmoke) trail(level, rnd, cfg, st, throttle, k * (electric ? 0.45 : 1.0), force, now, electric);
+            if (cfg.groundSmoke) ground(level, rnd, cfg, st, throttle, k * (electric ? 0.5 : 1.0), force, now, electric);
         }
         st.lastEmit = st.nozzle;
     }
 
     // ---------------------------------------------------------------- chamas / exaustao
     private static void flames(Level level, RandomSource rnd, Settings cfg, ThrusterState st,
-                               double throttle, double k, long now) {
-        int n = take(now, cfg, stochastic((1.0 + 3.0 * throttle) * k, rnd));
+                               double throttle, double k, long now, boolean electric) {
+        // eletrico: poucas faiscas brilhantes (END_ROD); combustao: chamas
+        int n = take(now, cfg, stochastic((electric ? 0.5 + 1.5 * throttle : 1.0 + 3.0 * throttle) * k, rnd));
         Vec3 d = st.dir;
         for (int i = 0; i < n; i++) {
             double along = rnd.nextDouble() * 0.45;
             double px = st.nozzle.x + d.x * along + jitter(rnd, 0.12);
             double py = st.nozzle.y + d.y * along + jitter(rnd, 0.12);
             double pz = st.nozzle.z + d.z * along + jitter(rnd, 0.12);
-            double sp = 0.07 + 0.15 * throttle;
+            double sp = electric ? 0.05 + 0.10 * throttle : 0.07 + 0.15 * throttle;
             // herda so um pouco da velocidade do foguete: as faiscas ficam para tras
             double vx = d.x * sp + st.vx * 0.15 + jitter(rnd, 0.02);
             double vy = d.y * sp + st.vy * 0.15 + jitter(rnd, 0.02);
             double vz = d.z * sp + st.vz * 0.15 + jitter(rnd, 0.02);
-            level.addParticle(rnd.nextFloat() < 0.65f ? ParticleTypes.FLAME : ParticleTypes.SMALL_FLAME,
-                    px, py, pz, vx, vy, vz);
+            ParticleOptions opt = electric ? ParticleTypes.END_ROD
+                    : (rnd.nextFloat() < 0.65f ? ParticleTypes.FLAME : ParticleTypes.SMALL_FLAME);
+            level.addParticle(opt, px, py, pz, vx, vy, vz);
         }
     }
 
     // ---------------------------------------------------------------- fumaca nos motores + rastro
     private static void trail(Level level, RandomSource rnd, Settings cfg, ThrusterState st,
-                              double throttle, double k, boolean force, long now) {
+                              double throttle, double k, boolean force, long now, boolean electric) {
         double travelled = st.lastEmit == null ? 0.0 : st.lastEmit.distanceTo(st.nozzle);
         if (travelled > 16.0) travelled = 0.0;
         double base = Math.max(1.0, travelled / 1.1);                      // ~1 puff por 1.1 bloco percorrido
@@ -89,15 +92,15 @@ final class ThrusterEffects {
             double vx = d.x * sp + st.vx * 0.04 + jitter(rnd, 0.015);
             double vy = d.y * sp + st.vy * 0.04 + jitter(rnd, 0.015);
             double vz = d.z * sp + st.vz * 0.04 + jitter(rnd, 0.015);
-            float scale = (float) ((1.6 + 2.0 * throttle) * cfg.particleScale * (0.8 + 0.4 * rnd.nextDouble()));
+            float scale = (float) ((1.6 + 2.0 * throttle) * cfg.particleScale * (electric ? 0.7 : 1.0) * (0.8 + 0.4 * rnd.nextDouble()));
             int life = (int) ((45 + 45 * throttle) * cfg.lifetimeScale * (0.8 + 0.4 * rnd.nextDouble()));
-            puff(level, force, px, py, pz, vx, vy, vz, scale, life, 0.9f);
+            puff(level, force, px, py, pz, vx, vy, vz, scale, life, 0.9f, electric);
         }
     }
 
     // ---------------------------------------------------------------- nuvem de fumaca no chao
     private static void ground(Level level, RandomSource rnd, Settings cfg, ThrusterState st,
-                               double throttle, double k, boolean force, long now) {
+                               double throttle, double k, boolean force, long now, boolean electric) {
         if (now >= st.nextGround) {                                         // raycast barato, espacado
             st.nextGround = now + cfg.groundInterval;
             Vec3 from = st.nozzle.add(st.dir.scale(0.6));
@@ -137,16 +140,20 @@ final class ThrusterEffects {
             double vx = rx * sp + nrm.x * 0.02;
             double vy = ry * sp + nrm.y * 0.02;
             double vz = rz * sp + nrm.z * 0.02;
-            float scale = (float) ((2.6 + 3.0 * intensity) * cfg.particleScale * (0.8 + 0.4 * rnd.nextDouble()));
+            float scale = (float) ((2.6 + 3.0 * intensity) * cfg.particleScale * (electric ? 0.8 : 1.0) * (0.8 + 0.4 * rnd.nextDouble()));
             int life = (int) ((60 + 60 * intensity) * cfg.lifetimeScale * (0.8 + 0.4 * rnd.nextDouble()));
-            puff(level, force, px, py, pz, vx, vy, vz, scale, life, 0.88f);
+            puff(level, force, px, py, pz, vx, vy, vz, scale, life, 0.88f, electric);
         }
     }
 
     // ---------------------------------------------------------------- utilidades
     private static void puff(Level level, boolean force, double x, double y, double z,
-                             double vx, double vy, double vz, float scale, int life, float shade) {
-        level.addParticle(new ThrusterSmokeParticleData(scale, Math.max(10, life), shade, shade, shade * 0.97f),
+                             double vx, double vy, double vz, float scale, int life, float shade, boolean electric) {
+        // combustao: cinza levemente quente; eletrico: branco azulado
+        float r = electric ? shade * 0.93f : shade;
+        float g = electric ? shade * 0.97f : shade;
+        float b = electric ? shade : shade * 0.97f;
+        level.addParticle(new ThrusterSmokeParticleData(scale, Math.max(10, life), r, g, b),
                 force, x, y, z, vx, vy, vz);
     }
 

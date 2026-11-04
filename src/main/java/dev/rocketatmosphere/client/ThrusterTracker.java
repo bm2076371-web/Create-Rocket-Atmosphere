@@ -2,6 +2,7 @@ package dev.rocketatmosphere.client;
 
 import dev.propulsionteam.propulsionsimulated.content.thruster.AbstractThrusterBlockEntity;
 import dev.propulsionteam.propulsionsimulated.content.thruster.AbstractThrusterBlockEntity.WorldExhaustRay;
+import dev.propulsionteam.propulsionsimulated.content.thruster.thruster.creative_thruster.CreativeThrusterBlockEntity.PlumeType;
 import dev.rocketatmosphere.RocketAtmosphere;
 import dev.rocketatmosphere.config.Settings;
 import net.minecraft.client.Minecraft;
@@ -82,7 +83,6 @@ public final class ThrusterTracker {
             RocketAtmosphere.LOGGER.info("[RocketAtmosphere] gancho ativo: primeiro motor do Create Propulsion detectado.");
         }
 
-        if (be.isIon()) return;                                   // motor ionico: sem fumaca/chama de combustao
         if (be.isMultiblock() && !be.isController()) return;      // so o controlador do bloco 2x2/3x3
 
         float throttle = Math.min(1.0f, be.getEffectiveThrottle());
@@ -91,11 +91,29 @@ public final class ThrusterTracker {
             return;
         }
 
+        // Perfil do motor. Vector (FE), Ion e Creative Vector herdam do motor ionico no Propulsion
+        // (isIon() == true): recebem o perfil "eletrico". Creative usa o tipo de pluma escolhido.
+        boolean electric;
+        if (be.isCreative()) {
+            PlumeType type = be.getPlumeType();
+            if (type == PlumeType.NONE) {
+                if (!STATES.isEmpty()) STATES.remove(be);
+                return;
+            }
+            electric = type != PlumeType.PLUME;
+        } else {
+            electric = be.isIon();
+        }
+        if (electric && !cfg.electric) {
+            if (!STATES.isEmpty()) STATES.remove(be);
+            return;
+        }
+
         ThrusterState st = STATES.computeIfAbsent(be, k -> new ThrusterState());
 
         if (now >= st.nextRay) {
             WorldExhaustRay ray = be.getWorldExhaustRay();
-            if (ray == null || ray.level() != level) {
+            if (ray == null) {
                 st.valid = false;
                 return;
             }
@@ -111,7 +129,7 @@ public final class ThrusterTracker {
 
         // Camera shake: acumula a contribuicao deste motor neste tick (motores maiores pesam mais).
         if (cfg.shake && dist < cfg.shakeRange) {
-            double size = 1.0 + 0.35 * Math.max(0, be.width - 1);
+            double size = (1.0 + 0.35 * Math.max(0, be.width - 1)) * (electric ? 0.55 : 1.0);
             CameraShake.addSource(throttle * size, dist, cfg.shakeRange);
         }
 
@@ -119,6 +137,6 @@ public final class ThrusterTracker {
         if (now < st.nextEmit) return;                            // espacamento por qualidade
         st.nextEmit = now + cfg.emitInterval;
 
-        ThrusterEffects.emit(level, cfg, st, throttle, dist, now);
+        ThrusterEffects.emit(level, cfg, st, throttle, dist, now, electric);
     }
 }

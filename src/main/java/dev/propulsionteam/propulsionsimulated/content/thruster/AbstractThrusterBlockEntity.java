@@ -1,5 +1,6 @@
 package dev.propulsionteam.propulsionsimulated.content.thruster;
 
+import dev.propulsionteam.propulsionsimulated.content.thruster.thruster.creative_thruster.CreativeThrusterBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -23,6 +24,8 @@ public abstract class AbstractThrusterBlockEntity extends BlockEntity {
     public boolean isMultiblock() { throw new UnsupportedOperationException("stub"); }
     public boolean isController() { throw new UnsupportedOperationException("stub"); }
     public boolean isIon() { throw new UnsupportedOperationException("stub"); }
+    public boolean isCreative() { throw new UnsupportedOperationException("stub"); }
+    public CreativeThrusterBlockEntity.PlumeType getPlumeType() { throw new UnsupportedOperationException("stub"); }
     public WorldExhaustRay getWorldExhaustRay() { throw new UnsupportedOperationException("stub"); }
 
     public record WorldExhaustRay(Level level, Vec3 nozzlePos, Vec3 direction) {}

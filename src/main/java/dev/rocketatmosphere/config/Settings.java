@@ -5,7 +5,7 @@ package dev.rocketatmosphere.config;
  */
 public final class Settings {
     public static final Settings DISABLED = new Settings(false, QualityPreset.MEDIUM, 0, 1.0,
-            false, false, false, false, false, 0.0);
+            false, false, false, false, false, false, 0.0);
 
     public final boolean enabled;
     public final boolean flames;
@@ -13,6 +13,7 @@ public final class Settings {
     public final boolean groundSmoke;
     public final boolean airDensity;
     public final boolean shake;
+    public final boolean electric;
     public final QualityPreset preset;
     public final double maxDistance;
     public final double particleScale;
@@ -29,7 +30,7 @@ public final class Settings {
 
     private Settings(boolean enabled, QualityPreset preset, int distanceOverride, double particleScale,
                      boolean flames, boolean trailSmoke, boolean groundSmoke, boolean airDensity,
-                     boolean shake, double shakeStrength) {
+                     boolean electric, boolean shake, double shakeStrength) {
         this.enabled = enabled;
         this.preset = preset;
         this.maxDistance = distanceOverride > 0 ? distanceOverride : preset.maxDistance;
@@ -38,6 +39,7 @@ public final class Settings {
         this.trailSmoke = trailSmoke;
         this.groundSmoke = groundSmoke;
         this.airDensity = airDensity;
+        this.electric = electric;
         this.shake = shake;
         this.shakeStrength = shakeStrength;
         this.density = preset.density;
@@ -60,6 +62,7 @@ public final class Settings {
                     RAConfig.TRAIL_SMOKE.get(),
                     RAConfig.GROUND_SMOKE.get(),
                     RAConfig.AIR_DENSITY.get(),
+                    RAConfig.ELECTRIC.get(),
                     RAConfig.SHAKE_ENABLED.get(),
                     RAConfig.SHAKE_STRENGTH.get());
         } catch (IllegalStateException configNotLoadedYet) {
