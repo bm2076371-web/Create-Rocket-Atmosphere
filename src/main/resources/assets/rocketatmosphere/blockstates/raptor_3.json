@@ -1,0 +1,50 @@
+{
+  "variants": {
+    "facing=north,multi=false": {
+      "model": "rocketatmosphere:block/raptor_3"
+    },
+    "facing=north,multi=true": {
+      "model": "rocketatmosphere:block/raptor_3"
+    },
+    "facing=south,multi=false": {
+      "model": "rocketatmosphere:block/raptor_3",
+      "y": 180
+    },
+    "facing=south,multi=true": {
+      "model": "rocketatmosphere:block/raptor_3",
+      "y": 180
+    },
+    "facing=west,multi=false": {
+      "model": "rocketatmosphere:block/raptor_3",
+      "y": 270
+    },
+    "facing=west,multi=true": {
+      "model": "rocketatmosphere:block/raptor_3",
+      "y": 270
+    },
+    "facing=east,multi=false": {
+      "model": "rocketatmosphere:block/raptor_3",
+      "y": 90
+    },
+    "facing=east,multi=true": {
+      "model": "rocketatmosphere:block/raptor_3",
+      "y": 90
+    },
+    "facing=up,multi=false": {
+      "model": "rocketatmosphere:block/raptor_3",
+      "x": 270
+    },
+    "facing=up,multi=true": {
+      "model": "rocketatmosphere:block/raptor_3",
+      "x": 270
+    },
+    "facing=down,multi=false": {
+      "model": "rocketatmosphere:block/raptor_3",
+      "x": 90
+    },
+    "facing=down,multi=true": {
+      "model": "rocketatmosphere:block/raptor_3",
+      "x": 90
+    }
+  }
+}

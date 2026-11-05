@@ -1,0 +1,10 @@
+{
+  "values": [
+    "rocketatmosphere:methane",
+    "rocketatmosphere:flowing_methane",
+    {
+      "id": "northstar:methane",
+      "required": false
+    }
+  ]
+}

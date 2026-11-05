@@ -1,0 +1,12 @@
+{
+  "block.rocketatmosphere.raptor_3": "Raptor 3",
+  "block.rocketatmosphere.methane": "Metano Liquido",
+  "block.rocketatmosphere.liquid_oxygen": "Oxigenio Liquido (LOX)",
+  "item.rocketatmosphere.methane_bucket": "Balde de Metano Liquido",
+  "item.rocketatmosphere.liquid_oxygen_bucket": "Balde de Oxigenio Liquido (LOX)",
+  "fluid.rocketatmosphere.methane": "Metano Liquido",
+  "fluid.rocketatmosphere.liquid_oxygen": "Oxigenio Liquido (LOX)",
+  "itemGroup.rocketatmosphere.main": "Create: Rocket Atmosphere",
+  "tooltip.rocketatmosphere.raptor.methane": "Metano (CH4): %1$s / %2$s mB",
+  "tooltip.rocketatmosphere.raptor.lox": "Oxigenio liquido (LOX): %1$s / %2$s mB"
+}

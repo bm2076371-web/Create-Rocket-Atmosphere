@@ -1,0 +1,41 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+license = "MIT"
+
+[[mods]]
+modId = "rocketatmosphere"
+version = "${mod_version}"
+displayName = "Create: Rocket Atmosphere"
+authors = "Rocket Atmosphere"
+description = '''Complemento do Create Propulsion: efeitos de lancamento (fumaca, chamas, vibracao de camera), detector de espaco (integra com o Create: Cosmonautics) e o motor Raptor 3 (metano + oxigenio liquido).'''
+
+[[mixins]]
+config = "rocketatmosphere.mixins.json"
+
+[[dependencies.rocketatmosphere]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.1.219,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.rocketatmosphere]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21.1]"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.rocketatmosphere]]
+modId = "createpropulsion"
+type = "required"
+versionRange = "[1.1.5,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.rocketatmosphere]]
+modId = "rocketnautics"
+type = "optional"
+versionRange = "[0,)"
+ordering = "AFTER"
+side = "BOTH"
