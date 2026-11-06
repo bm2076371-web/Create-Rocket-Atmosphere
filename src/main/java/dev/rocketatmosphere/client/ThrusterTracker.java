@@ -5,6 +5,7 @@ import dev.propulsionteam.propulsionsimulated.content.thruster.AbstractThrusterB
 import dev.propulsionteam.propulsionsimulated.content.thruster.thruster.creative_thruster.CreativeThrusterBlockEntity.PlumeType;
 import dev.rocketatmosphere.RocketAtmosphere;
 import dev.rocketatmosphere.config.Settings;
+import dev.rocketatmosphere.engine.RocketEngineBlockEntity;
 import dev.rocketatmosphere.space.SpaceZone;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -146,6 +147,7 @@ public final class ThrusterTracker {
         if (now < st.nextEmit) return;                            // espacamento por qualidade
         st.nextEmit = now + cfg.emitInterval;
 
-        ThrusterEffects.emit(level, cfg, st, throttle, dist, now, electric);
+        double smoke = be instanceof RocketEngineBlockEntity engine ? engine.smokeFactor() : 1.0;
+        ThrusterEffects.emit(level, cfg, st, throttle, dist, now, electric, smoke);
     }
 }

@@ -6,9 +6,6 @@
     "IBI"
   ],
   "key": {
-    "N": {
-      "item": "minecraft:netherite_ingot"
-    },
     "F": {
       "item": "create:fluid_pipe"
     },
@@ -23,6 +20,9 @@
     },
     "B": {
       "item": "create:brass_casing"
+    },
+    "N": {
+      "item": "minecraft:netherite_ingot"
     }
   },
   "result": {

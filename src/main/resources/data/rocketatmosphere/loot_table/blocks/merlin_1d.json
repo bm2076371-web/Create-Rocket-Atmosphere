@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "random_sequence": "rocketatmosphere:blocks/merlin_1d",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "rocketatmosphere:merlin_1d"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "IFI",
+    "PTP",
+    "IBI"
+  ],
+  "key": {
+    "F": {
+      "item": "create:fluid_pipe"
+    },
+    "P": {
+      "item": "create:mechanical_pump"
+    },
+    "T": {
+      "item": "createpropulsion:thruster"
+    },
+    "I": {
+      "item": "create:iron_sheet"
+    },
+    "B": {
+      "item": "create:brass_casing"
+    }
+  },
+  "result": {
+    "id": "rocketatmosphere:rl10"
+  }
+}

@@ -7,7 +7,7 @@ modId = "rocketatmosphere"
 version = "${mod_version}"
 displayName = "Create: Rocket Atmosphere"
 authors = "Rocket Atmosphere"
-description = '''Complemento do Create Propulsion: efeitos de lancamento (fumaca, chamas, vibracao de camera), detector de espaco (integra com o Create: Cosmonautics) e o motor Raptor 3 (metano + oxigenio liquido).'''
+description = '''Complemento do Create Propulsion: efeitos de lancamento (fumaca, chamas, vibracao de camera), detector de espaco (integra com o Create: Cosmonautics) e motores de foguete bipropelentes: Raptor 3, Raptor Vacuum, Merlin 1D, RS-25, F-1, BE-4, RD-180, Rutherford e RL10.'''
 
 [[mixins]]
 config = "rocketatmosphere.mixins.json"

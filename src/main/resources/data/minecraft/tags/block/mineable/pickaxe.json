@@ -1,5 +1,13 @@
 {
   "values": [
-    "rocketatmosphere:raptor_3"
+    "rocketatmosphere:raptor_3",
+    "rocketatmosphere:raptor_vacuum",
+    "rocketatmosphere:merlin_1d",
+    "rocketatmosphere:rs_25",
+    "rocketatmosphere:f_1",
+    "rocketatmosphere:be_4",
+    "rocketatmosphere:rd_180",
+    "rocketatmosphere:rutherford",
+    "rocketatmosphere:rl10"
   ]
 }

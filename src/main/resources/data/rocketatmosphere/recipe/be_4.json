@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "DFD",
+    "PTP",
+    "IBI"
+  ],
+  "key": {
+    "F": {
+      "item": "create:fluid_pipe"
+    },
+    "P": {
+      "item": "create:mechanical_pump"
+    },
+    "T": {
+      "item": "createpropulsion:thruster"
+    },
+    "I": {
+      "item": "create:iron_sheet"
+    },
+    "B": {
+      "item": "create:brass_casing"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "result": {
+    "id": "rocketatmosphere:be_4"
+  }
+}

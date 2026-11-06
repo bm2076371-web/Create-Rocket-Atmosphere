@@ -34,7 +34,7 @@ final class ThrusterEffects {
 
     private ThrusterEffects() {}
 
-    static void emit(Level level, Settings cfg, ThrusterState st, double throttle, double dist, long now, boolean electric) {
+    static void emit(Level level, Settings cfg, ThrusterState st, double throttle, double dist, long now, boolean electric, double smoke) {
         RandomSource rnd = level.getRandom();
         double lod = 1.0 - 0.65 * Math.min(1.0, dist / cfg.maxDistance);   // longe = menos particulas
         boolean force = dist > FORCE_DISTANCE;
@@ -59,9 +59,10 @@ final class ThrusterEffects {
             flames(level, rnd, cfg, st, throttle, cfg.density * lod, now, electric, vacuum);
         }
         if (air > 0.08) {                                                  // sem fumaca no vacuo
-            double k = cfg.density * lod * air;
-            if (cfg.trailSmoke) trail(level, rnd, cfg, st, throttle, k * (electric ? 0.45 : 1.0), force, now, electric);
-            if (cfg.groundSmoke) ground(level, rnd, cfg, st, throttle, k * (electric ? 0.5 : 1.0), force, now, electric);
+            double k = cfg.density * lod * air * smoke;                     // RP-1 solta mais fumaca; hidrogenio quase nenhuma
+            float shade = smoke > 1.2 ? 0.72f : (smoke < 0.5 ? 0.97f : 0.9f);   // fuligem escura x vapor branco
+            if (cfg.trailSmoke) trail(level, rnd, cfg, st, throttle, k * (electric ? 0.45 : 1.0), force, now, electric, shade);
+            if (cfg.groundSmoke) ground(level, rnd, cfg, st, throttle, k * (electric ? 0.5 : 1.0), force, now, electric, shade - 0.02f);
         }
         st.lastEmit = st.nozzle;
     }
@@ -91,7 +92,7 @@ final class ThrusterEffects {
 
     // ---------------------------------------------------------------- fumaca nos motores + rastro
     private static void trail(Level level, RandomSource rnd, Settings cfg, ThrusterState st,
-                              double throttle, double k, boolean force, long now, boolean electric) {
+                              double throttle, double k, boolean force, long now, boolean electric, float shade) {
         double travelled = st.lastEmit == null ? 0.0 : st.lastEmit.distanceTo(st.nozzle);
         if (travelled > 16.0) travelled = 0.0;
         double base = Math.max(1.0, travelled / 1.1);                      // ~1 puff por 1.1 bloco percorrido
@@ -115,13 +116,13 @@ final class ThrusterEffects {
             double vz = d.z * sp + st.vz * 0.04 + jitter(rnd, 0.015);
             float scale = (float) ((1.6 + 2.0 * throttle) * cfg.particleScale * (electric ? 0.7 : 1.0) * (0.8 + 0.4 * rnd.nextDouble()));
             int life = (int) ((45 + 45 * throttle) * cfg.lifetimeScale * (0.8 + 0.4 * rnd.nextDouble()));
-            puff(level, force, px, py, pz, vx, vy, vz, scale, life, 0.9f, electric);
+            puff(level, force, px, py, pz, vx, vy, vz, scale, life, shade, electric);
         }
     }
 
     // ---------------------------------------------------------------- nuvem de fumaca no chao
     private static void ground(Level level, RandomSource rnd, Settings cfg, ThrusterState st,
-                               double throttle, double k, boolean force, long now, boolean electric) {
+                               double throttle, double k, boolean force, long now, boolean electric, float shade) {
         if (now >= st.nextGround) {                                         // raycast barato, espacado
             st.nextGround = now + cfg.groundInterval;
             Vec3 from = st.nozzle.add(st.dir.scale(0.6));
@@ -163,7 +164,7 @@ final class ThrusterEffects {
             double vz = rz * sp + nrm.z * 0.02;
             float scale = (float) ((2.6 + 3.0 * intensity) * cfg.particleScale * (electric ? 0.8 : 1.0) * (0.8 + 0.4 * rnd.nextDouble()));
             int life = (int) ((60 + 60 * intensity) * cfg.lifetimeScale * (0.8 + 0.4 * rnd.nextDouble()));
-            puff(level, force, px, py, pz, vx, vy, vz, scale, life, 0.88f, electric);
+            puff(level, force, px, py, pz, vx, vy, vz, scale, life, shade, electric);
         }
     }
 

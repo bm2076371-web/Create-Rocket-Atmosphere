@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:block",
+  "random_sequence": "rocketatmosphere:blocks/f_1",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "rocketatmosphere:f_1"
+        }
+      ],
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ]
+    }
+  ]
+}

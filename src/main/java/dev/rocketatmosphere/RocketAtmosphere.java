@@ -2,7 +2,7 @@ package dev.rocketatmosphere;
 
 import com.mojang.logging.LogUtils;
 import dev.rocketatmosphere.config.RAConfig;
-import dev.rocketatmosphere.raptor.RaptorRegistries;
+import dev.rocketatmosphere.engine.RocketRegistries;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -17,7 +17,7 @@ public final class RocketAtmosphere {
 
     public RocketAtmosphere(IEventBus modBus, ModContainer container) {
         container.registerConfig(ModConfig.Type.CLIENT, RAConfig.SPEC, "rocketatmosphere-client.toml");
-        RaptorRegistries.register(modBus);                 // Raptor 3 + metano + LOX (comum: cliente e servidor)
+        RocketRegistries.register(modBus);                 // motores + fluidos (comum: cliente e servidor)
         LOGGER.info("[RocketAtmosphere] carregado.");
     }
 }

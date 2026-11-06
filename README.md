@@ -1,9 +1,40 @@
-# Create: Rocket Atmosphere (v0.2.0)
+# Create: Rocket Atmosphere (v0.3.0)
 
 Mod para Minecraft 1.21.1 / NeoForge (efeitos e detector no cliente; **o Raptor 3 e os fluidos exigem o mod também no servidor**) que adiciona efeitos de lançamento ao
 **Create Propulsion: Simulated 1.1.5**: fumaça de ignição espalhada no chão, fumaça nos motores,
 rastro na subida, faíscas de chama e vibração de câmera por distância. Não altera nenhum arquivo do
 Create Propulsion.
+
+## Novidades da v0.3.0: motores de foguete
+
+Todos os motores usam o mesmo sistema (`engine/RocketEngineBlockEntity`, que herda do `ThrusterBlockEntity` do Propulsion):
+empuxo na estrutura inteira, potência por redstone 0–15 = 0–100% (proporcional, com rampa de ~0,5 s), pluma e goggles do
+Propulsion. Cada motor tem dois tanques (combustível + LOX), liga só com os dois e desliga sozinho se faltar um.
+Os valores abaixo são **relativos ao Thruster comum** (balanceamento meu, ajuste em `engine/RocketEngines.java`).
+
+| Motor (foguete) | Combustível | Empuxo | Consumo | LOX por mB de comb. | Atmosfera | Fumaça |
+|---|---|---|---|---|---|---|
+| Raptor 3 (Starship / Super Heavy) | metano | 4,0x | 4,0x | 1,33 | sem dependência de ar | normal |
+| Raptor Vacuum (Starship) | metano | 3,6x | 3,2x | 1,33 | 35% do empuxo no ar, 100% no vácuo | normal |
+| Merlin 1D (Falcon 9) | RP-1 | 1,6x | 1,8x | 1,68 | sem dependência de ar | muita, escura |
+| RS-25 (Shuttle / SLS) | hidrogênio | 3,2x | 6,4x | 0,375 | sem dependência de ar | quase nenhuma, vapor |
+| F-1 (Saturn V) | RP-1 | 8,0x | 9,6x | 1,61 | sem dependência de ar | muita, escura |
+| BE-4 (Vulcan / New Glenn) | metano | 3,6x | 3,6x | 1,33 | sem dependência de ar | normal |
+| RD-180 (Atlas V), dois sinos | RP-1 | 5,0x | 5,8x | 1,93 | sem dependência de ar | muita, escura |
+| Rutherford (Electron) | RP-1 | 0,5x | 0,6x | 1,63 | sem dependência de ar | alguma |
+| RL10 (estágio superior) | hidrogênio | 0,8x | 1,6x | 0,366 | 5% do empuxo no ar, 100% no vácuo | quase nenhuma |
+
+* **Fluidos novos:** metano líquido, oxigênio líquido (LOX), RP-1 e hidrogênio líquido, com baldes na aba criativa.
+  Tags: `rocketatmosphere:methane`, `lox`, `rp1`, `lh2` (outros mods podem adicionar fluidos às tags por datapack).
+* **Motores de vácuo** (Raptor Vacuum, RL10): o empuxo vai de `seaLevelFactor` (no ar) até 100% (vácuo), pela pressão do ar do Sable
+  na boca do bocal (`DimensionPhysicsData.getAirPressure`).
+* **Razão O/F volumétrica** = O/F em massa x densidade do combustível / densidade do LOX (CH4 3,6; RP-1 2,3–2,7; LH2 ~6).
+* **Modelos** gerados por `tools/gen_assets.py`, cada um com silhueta e paleta próprias; `tools/engines-preview.png` mostra todos.
+* **Receitas** (`data/rocketatmosphere/recipe/`): usam o Thruster do Propulsion; grandes com netherite, médios com diamante,
+  pequenos só com chapas de ferro. Não há receitas dos fluidos ainda.
+* **Mudança de compatibilidade:** o tipo de BlockEntity passou a ser um só (`rocketatmosphere:rocket_engine`). Raptor 3 colocados
+  com a v0.2.0 perdem o conteúdo dos tanques (os blocos continuam).
+* Não existe ainda um bloco "aglomerado" (Super Heavy com 33 Raptors): cada Raptor é um bloco; coloque vários.
 
 ## Novidades da v0.2.0
 
@@ -42,7 +73,7 @@ Reaproveita a arquitetura do Create Propulsion em vez de criar física própria.
   (bônus) só existe em multiblock; `consumeFuelWithAccumulator` consome mB por tick.
 * **Atmosfera:** `calculateAtmosphericFactor()` reduz o empuxo com a pressão do ar (o Raptor sobrescreve para 1.0).
 
-O que o Raptor 3 faz (`raptor/Raptor3BlockEntity`, herda de `ThrusterBlockEntity`):
+O que o Raptor 3 faz (agora `engine/RocketEngineBlockEntity`, herda de `ThrusterBlockEntity`):
 
 * **Metano (CH4)** no `tank` e **LOX** em um segundo tanque; cada um só aceita o seu fluido (tags `rocketatmosphere:methane` e
   `rocketatmosphere:lox`; `northstar:methane` entra na tag se existir).
@@ -97,14 +128,14 @@ o rastro seguem a inclinacao.
    `.github/workflows/build.yml`) e cole o conteúdo.
 2. Aba **Actions** → workflow **Build** → *Run workflow* (ou ele roda sozinho a cada push).
 3. Ao terminar (verde), abra a execução → **Artifacts** → `create-rocket-atmosphere-jar` → baixe o zip
-   e extraia `rocketatmosphere-0.2.0.jar`.
+   e extraia `rocketatmosphere-0.3.0.jar`.
 4. Se ficar vermelho: abra o passo *Build*, copie o erro e mande no chat.
 
 No PC: `gradle build` (Gradle 8.8+, Java 21); o jar fica em `build/libs/`.
 
 ## Instalar e testar
 
-1. Coloque `rocketatmosphere-0.2.0.jar` na pasta de mods (Battly: junto dos outros .jar). Requer
+1. Coloque `rocketatmosphere-0.3.0.jar` na pasta de mods (Battly: junto dos outros .jar). Requer
    Create Propulsion 1.1.5+ (e, portanto, Sable/Create que ele já exige).
 2. No jogo: `/rocketatmosphere status` → deve mostrar `gancho ativo=ainda nao` até um motor existir
    por perto. Ligue um motor (qualquer propulsor não-iônico): o status passa a `gancho ativo=sim`.
